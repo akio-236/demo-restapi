@@ -2,7 +2,10 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+todos = []
 
-@app.post("/hello")
-async def hello():
-    return "Hello"
+
+@app.post("/todos")
+async def add_todos(data):
+    todos.append(data)
+    return data
