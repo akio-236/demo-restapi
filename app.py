@@ -3,10 +3,18 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-class Todo(BaseModel):
+class BaseTodo(BaseModel):
+    task: str
+
+
+class Todo(BaseTodo):
     id: Optional[int] = None
     task: str
     completed: bool = False
+
+
+class ReturntoTodo(BaseTodo):
+    pass
 
 
 app = FastAPI()
@@ -14,7 +22,7 @@ app = FastAPI()
 todos = []
 
 
-@app.post("/todos")
+@app.post("/todos", response_model=ReturntoTodo)
 async def add_todos(todo: Todo):
     todo.id = len(todos) + 1
     todos.append(todo)
