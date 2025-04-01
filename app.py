@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
+from time import time
 
 
 class BaseTodo(BaseModel):
@@ -20,6 +21,17 @@ class ReturntoTodo(BaseTodo):
 app = FastAPI()
 
 todos = []
+
+
+@app.middleware("http")
+async def log_middlware(request, call_next):
+    print("Before route")
+    start_time = time()
+    response = await call_next(request)
+    end_time = time()
+    process_time = end_time - start_time
+    print(f"Request: {request.url} processed in {process_time} in sec")
+    return response
 
 
 @app.post("/todos", response_model=ReturntoTodo)
