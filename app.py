@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from typing import Optional
 from time import time
@@ -43,10 +43,15 @@ async def log_middlware(request, call_next):
     return response
 
 
+async def send_email(todo: Todo):
+    print("Email notification for Todo {todo.id} sent")
+
+
 @app.post("/todos", response_model=ReturntoTodo)
-async def add_todos(todo: Todo):
+async def add_todos(todo: Todo, background_tasks: BackgroundTasks):
     todo.id = len(todos) + 1
     todos.append(todo)
+    background_tasks.add_task(send_email, todo)
     return todo
 
 
