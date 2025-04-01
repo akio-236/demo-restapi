@@ -30,8 +30,11 @@ async def add_todos(todo: Todo):
 
 
 @app.get("/todos")
-async def read_todos():
-    return todos
+async def read_todos(completed: Optional[bool] = None):
+    if completed is None:
+        return todos
+    else:
+        return [todo for todo in todos if todo.completed == completed]
 
 
 @app.get("/todos/{id}")
