@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 from time import time
+from fastapi.middleware.cors import CORSMiddleware
 
 
 class BaseTodo(BaseModel):
@@ -19,6 +20,14 @@ class ReturntoTodo(BaseTodo):
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 todos = []
 
